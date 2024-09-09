@@ -17,6 +17,8 @@ func ConnectToDatabase(dbURL string) error {
 		GORM_DB = db
 		SQL_DB, _ = db.DB()
 		DB_MIGRATOR = db.Migrator()
+
 	}
+
 	return err
 }

@@ -4,11 +4,8 @@ import (
 	"gorm.io/gorm"
 )
 
-type Id int64
-
 type Follow struct {
-	gorm.Model
-	UserID    int64 `json:"user_id"`
-	Followers []Id  `json:"followers"`
-	Following []Id  `json:"following"`
+	*gorm.Model
+	Follower  int64 `json:"follower"`
+	Following int64 `json:"following"`
 }
