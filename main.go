@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/pressly/goose"
 )
 
 func main() {
@@ -19,13 +20,13 @@ func main() {
 
 	fmt.Println("connected to database ...")
 
-	// if err := goose.SetDialect("postgres"); err != nil {
-	// 	panic(err)
-	// }
+	if err := goose.SetDialect("postgres"); err != nil {
+		panic(err)
+	}
 
-	// if err := goose.Up(database.SQL_DB, "migrations"); err != nil {
-	// 	panic(err)
-	// }
+	if err := goose.Up(database.SQL_DB, "migrations"); err != nil {
+		panic(err)
+	}
 
 	// if err := goose.Down(database.SQL_DB, "migrations"); err != nil {
 	// 	panic(err)

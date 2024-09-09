@@ -14,7 +14,7 @@ func init() {
 }
 
 func upCreatefollow(ctx context.Context, tx *sql.Tx) error {
-	return database.DB_MIGRATOR.CreateTable(&models.follow{})
+	return database.DB_MIGRATOR.CreateTable(&models.Follow{})
 }
 
 func downCreatefollow(ctx context.Context, tx *sql.Tx) error {
