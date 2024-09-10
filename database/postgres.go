@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -18,6 +19,7 @@ func ConnectToDatabase(dbURL string) error {
 		SQL_DB, _ = db.DB()
 		DB_MIGRATOR = db.Migrator()
 
+		fmt.Println("DB_MIGRATOR", DB_MIGRATOR)
 	}
 
 	return err

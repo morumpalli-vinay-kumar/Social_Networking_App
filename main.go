@@ -2,12 +2,12 @@ package main
 
 import (
 	"app/database"
-	_ "app/migrations" // This loads the migrations init functions
+	"app/handlers"
+
+	_ "app/migrations"
 	"fmt"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/pressly/goose"
 )
 
 func main() {
@@ -20,23 +20,19 @@ func main() {
 
 	fmt.Println("connected to database ...")
 
-	if err := goose.SetDialect("postgres"); err != nil {
-		panic(err)
-	}
+	// if err := goose.SetDialect("postgres"); err != nil {
+	// 	panic(err)
+	// }
 
-	if err := goose.Up(database.SQL_DB, "migrations"); err != nil {
-		panic(err)
-	}
-
-	// if err := goose.Down(database.SQL_DB, "migrations"); err != nil {
+	// if err := goose.Up(database.SQL_DB, "migrations"); err != nil {
 	// 	panic(err)
 	// }
 
 	r := gin.Default()
 
-	r.GET("api/v1", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"data": "helloworld"})
-	})
-	r.Run()
+	r.POST("/signup", handlers.Signup)
+	r.POST("/login", handlers.Login)
+
+	r.Run(":8080")
 
 }
