@@ -5,14 +5,12 @@ import (
 )
 
 type Office struct {
-	*gorm.Model
+	gorm.Model
 	OfficeID      int64  `json:"office_id"`
-	Name          string `json:"name"`
-	PersonalEmail string `json:"personalmail"`
-	OfficeMail    string `json:"officemail"`
-	City          string `json:"city"`
-	State         string `json:"state"`
-	Pincode       string `json:"pincode"`
-	Country       string `json:"country"`
-	PhoneNumber   string `json:"phone_number"`
+	UserID        int64  `json:"user_id" gorm:"unique"`
+	OfficeMail    string `json:"office_mail"`
+	OfficeCity    string `json:"office_city"`
+	OfficeState   string `json:"office_state"`
+	OfficePincode string `json:"office_pincode"`
+	OfficeCountry string `json:"office_country"`
 }
