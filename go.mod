@@ -12,7 +12,10 @@ require (
 	gorm.io/gorm v1.25.11
 )
 
-require modernc.org/sqlite v1.33.0 // indirect
+require (
+	github.com/gin-contrib/cors v1.7.2 // indirect
+	modernc.org/sqlite v1.33.0 // indirect
+)
 
 require (
 	github.com/bytedance/sonic v1.11.6 // indirect

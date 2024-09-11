@@ -10,6 +10,7 @@ import (
 	_ "app/migrations"
 	"fmt"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -36,6 +37,13 @@ func main() {
 	fmt.Println("Connected to Database ----> ", databaseName)
 
 	r := gin.Default()
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "X-Requested-With", "Accept"},
+		AllowCredentials: true,
+		ExposeHeaders:    []string{"Content-Length", "X-Request-ID"},
+	}))
 	r.POST("/signup", handlers.Signup)
 	r.POST("/login", handlers.Login)
 
