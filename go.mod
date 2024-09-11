@@ -4,6 +4,7 @@ go 1.23.0
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
+	github.com/gin-contrib/cors v1.7.2
 	github.com/gin-gonic/gin v1.10.0
 	github.com/joho/godotenv v1.5.1
 	github.com/nyaruka/phonenumbers v1.4.0
@@ -12,10 +13,7 @@ require (
 	gorm.io/gorm v1.25.11
 )
 
-require (
-	github.com/gin-contrib/cors v1.7.2 // indirect
-	modernc.org/sqlite v1.33.0 // indirect
-)
+require modernc.org/sqlite v1.33.0 // indirect
 
 require (
 	github.com/bytedance/sonic v1.11.6 // indirect
