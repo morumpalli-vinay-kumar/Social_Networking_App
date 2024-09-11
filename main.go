@@ -33,15 +33,7 @@ func main() {
 		panic(err2)
 	}
 
-	fmt.Println("Connected to Database ... ")
-
-	// if err := goose.SetDialect("postgres"); err != nil {
-	// 	panic(err)
-	// }
-
-	// if err := goose.Up(database.SQL_DB, "migrations"); err != nil {
-	// 	panic(err)
-	// }
+	fmt.Println("Connected to Database ----> ", databaseName)
 
 	r := gin.Default()
 	r.POST("/signup", handlers.Signup)
@@ -54,6 +46,7 @@ func main() {
 	protected.PATCH("/user", handlers.UpdateUser)
 	protected.DELETE("/user", handlers.DeleteUser)
 	protected.GET("/user", handlers.GetUserDetails)
+
 	r.Run(":8080")
 
 }

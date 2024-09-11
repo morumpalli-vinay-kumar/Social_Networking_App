@@ -20,6 +20,12 @@ func Signup(c *gin.Context) {
 		return
 	}
 
+	var existingUser models.User
+	if err := database.GORM_DB.Where("user_id = ?", request.User.UserID).First(&existingUser).Error; err == nil {
+		c.JSON(http.StatusConflict, gin.H{"error": "User already exists!"})
+		return
+	}
+
 	if err := request.User.HashPassword(request.User.Password); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
 		return
@@ -36,7 +42,7 @@ func Signup(c *gin.Context) {
 	err := database.GORM_DB.Where("user_id = ?", request.Office.UserID).First(&existingOffice).Error
 	if err == nil {
 		if err := database.GORM_DB.Model(&existingOffice).Updates(request.Office).Error; err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update office: " + err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "User already exists!"})
 			return
 		}
 	} else {

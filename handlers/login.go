@@ -4,7 +4,6 @@ import (
 	"app/database"
 	"app/models"
 	"app/utils"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -27,13 +26,11 @@ func Login(c *gin.Context) {
 	}
 
 	if err := database.GORM_DB.Where("user_id= ?", input.UserID).First(&user).Error; err != nil {
-		// fmt.Println("error 1")
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid user id or password"})
 		return
 	}
 
 	if err := user.CheckPassword(input.Password); err != nil {
-		fmt.Println("error 2")
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid email or password"})
 		return
 	}

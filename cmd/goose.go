@@ -1,7 +1,6 @@
 package main
 
 import (
-	_ "app/migrations"
 	"flag"
 	"fmt"
 	"log"
@@ -9,14 +8,12 @@ import (
 
 	_ "app/migrations"
 
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/pressly/goose/v3"
 )
 
-var (
-	flags = flag.NewFlagSet("goose", flag.ExitOnError)
-	dir   = flags.String("dir", ".", "directory with migration files")
-)
+var flags = flag.NewFlagSet("goose", flag.ExitOnError)
 
 func main() {
 	flags.Parse(os.Args[1:])
@@ -29,7 +26,20 @@ func main() {
 
 	command := args[0]
 
-	dsn := "postgres://postgres:postgres@localhost:5432/socialnetworkapp?sslmode=disable"
+	err1 := godotenv.Load("/home/ubuntu/app/goose.env")
+	if err1 != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
+	databaseName := os.Getenv("DATABASE_NAME")
+	user := os.Getenv("USER_NAME")
+	password := os.Getenv("PASSWORD")
+	host := os.Getenv("HOST")
+	port := os.Getenv("PORT")
+	sslmode := os.Getenv("SSLMODE")
+
+	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s", user, password, host, port, databaseName, sslmode)
+
 	db, err := goose.OpenDBWithDriver("postgres", dsn)
 	if err != nil {
 		log.Fatalf("goose: failed to open DB: %v\n", err)
@@ -51,5 +61,3 @@ func main() {
 		log.Fatalf("goose %v: %v", command, err)
 	}
 }
-
-//
