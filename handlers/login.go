@@ -13,13 +13,6 @@ func Login(c *gin.Context) {
 	var user models.User
 	var input models.User
 
-	_, err := utils.ValidateJWTFromHeader(c)
-
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-		return
-	}
-
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

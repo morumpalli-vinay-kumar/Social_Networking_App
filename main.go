@@ -37,15 +37,16 @@ func main() {
 
 	r := gin.Default()
 	r.POST("/signup", handlers.Signup)
+	r.POST("/login", handlers.Login)
 
 	protected := r.Group("/")
 	protected.Use(middleware.JWTAuthMiddleware())
 
-	protected.POST("/login", handlers.Login)
 	protected.GET("/users", handlers.GetAllActiveUsers)
-	protected.PATCH("/user", handlers.UpdateUser)
-	protected.DELETE("/user", handlers.DeleteUser)
-	protected.GET("/user", handlers.GetUserDetails)
+	protected.GET("/users/:user_id", handlers.GetUserDetails)
+
+	protected.PATCH("/users", handlers.UpdateUser)
+	protected.DELETE("/users", handlers.DeleteUser)
 
 	r.Run(":8080")
 

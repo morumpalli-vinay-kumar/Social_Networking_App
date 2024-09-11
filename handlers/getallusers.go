@@ -3,19 +3,12 @@ package handlers
 import (
 	"app/database"
 	"app/models"
-	"app/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func GetAllActiveUsers(c *gin.Context) {
-
-	_, err := utils.ValidateJWTFromHeader(c)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-		return
-	}
 
 	var users []models.User
 

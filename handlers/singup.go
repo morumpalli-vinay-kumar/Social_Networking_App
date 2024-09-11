@@ -6,7 +6,9 @@ import (
 	"app/utils"
 	"net/http"
 
+	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
+	"github.com/nyaruka/phonenumbers"
 )
 
 func Signup(c *gin.Context) {
@@ -17,6 +19,22 @@ func Signup(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error while parsing request": err.Error()})
+		return
+	}
+
+	if !govalidator.IsEmail(request.User.PersonalEmail) {
+		c.JSON(http.StatusBadRequest, gin.H{"Invalid Email ": request.User.PersonalEmail})
+		return
+	}
+
+	num, err := phonenumbers.Parse(request.User.PhoneNumber, "")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"Invalid Phone Number ": request.User.PhoneNumber})
+		return
+	}
+
+	if !phonenumbers.IsValidNumber(num) {
+		c.JSON(http.StatusBadRequest, gin.H{"Invalid Phone Number ": num})
 		return
 	}
 
@@ -39,8 +57,8 @@ func Signup(c *gin.Context) {
 	request.Office.UserID = request.User.UserID
 
 	var existingOffice models.Office
-	err := database.GORM_DB.Where("user_id = ?", request.Office.UserID).First(&existingOffice).Error
-	if err == nil {
+	errr := database.GORM_DB.Where("user_id = ?", request.Office.UserID).First(&existingOffice).Error
+	if errr == nil {
 		if err := database.GORM_DB.Model(&existingOffice).Updates(request.Office).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "User already exists!"})
 			return
