@@ -21,7 +21,7 @@ func upCreateoffice(ctx context.Context, tx *sql.Tx) error {
 	if err != nil {
 		return err
 	}
-	return db.Migrator().CreateTable(&models.Office{})
+	return db.Migrator().CreateTable(&models.OfficeDetails{})
 }
 
 func downCreateoffice(ctx context.Context, tx *sql.Tx) error {
@@ -31,5 +31,5 @@ func downCreateoffice(ctx context.Context, tx *sql.Tx) error {
 	if err != nil {
 		return err
 	}
-	return db.Migrator().DropTable(&models.Office{})
+	return db.Migrator().DropTable(&models.OfficeDetails{})
 }
