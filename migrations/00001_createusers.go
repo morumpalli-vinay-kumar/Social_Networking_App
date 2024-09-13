@@ -14,10 +14,6 @@ func init() {
 	goose.AddMigrationContext(upCreateusers, downCreateusers)
 }
 
-var GORM_DB *gorm.DB
-var SQL_DB *sql.DB
-var DB_MIGRATOR gorm.Migrator
-
 func upCreateusers(ctx context.Context, tx *sql.Tx) error {
 	db, err := gorm.Open(postgres.New(postgres.Config{
 		Conn: tx,
@@ -25,7 +21,7 @@ func upCreateusers(ctx context.Context, tx *sql.Tx) error {
 	if err != nil {
 		return err
 	}
-	return db.Migrator().CreateTable(&models.User{})
+	return db.Migrator().CreateTable(&models.UserDetails{})
 
 }
 
@@ -36,5 +32,5 @@ func downCreateusers(ctx context.Context, tx *sql.Tx) error {
 	if err != nil {
 		return err
 	}
-	return db.Migrator().DropTable(&models.User{})
+	return db.Migrator().DropTable(&models.UserDetails{})
 }

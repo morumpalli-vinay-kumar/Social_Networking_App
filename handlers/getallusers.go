@@ -10,26 +10,17 @@ import (
 
 func GetAllActiveUsers(c *gin.Context) {
 
-	var users []models.User
+	var allusers []struct {
+		ID    uint   `json:"user_id"`
+		Email string `json:"email"`
+	}
 
-	if err := database.GORM_DB.Where("is_active = ?", true).Find(&users).Error; err != nil {
+	if err := database.GORM_DB.Model(&models.UserDetails{}).
+		Select("id, email").
+		Find(&allusers).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch users"})
 		return
 	}
 
-	var response []gin.H
-
-	for _, user := range users {
-		var office models.Office
-		if err := database.GORM_DB.Where("user_id = ?", user.UserID).First(&office).Error; err != nil {
-			continue
-		}
-
-		response = append(response, gin.H{
-			"user":   user,
-			"office": office,
-		})
-	}
-
-	c.JSON(http.StatusOK, gin.H{"Data with office is ": response})
+	c.JSON(http.StatusOK, gin.H{"Users": allusers})
 }

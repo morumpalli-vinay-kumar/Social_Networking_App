@@ -1,16 +1,14 @@
 package main
 
 import (
+	"app/controllers"
 	"app/database"
 	"app/handlers"
 	"app/middleware"
+	"fmt"
 	"log"
 	"os"
 
-	_ "app/migrations"
-	"fmt"
-
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -37,24 +35,19 @@ func main() {
 	fmt.Println("Connected to Database ----> ", databaseName)
 
 	r := gin.Default()
-	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "X-Requested-With", "Accept"},
-		AllowCredentials: true,
-		ExposeHeaders:    []string{"Content-Length", "X-Request-ID"},
-	}))
-	r.POST("/signup", handlers.Signup)
-	r.POST("/login", handlers.Login)
+
+	r.POST("/signup", controllers.Signup)
+	r.POST("/login", controllers.Login)
 
 	protected := r.Group("/")
+
 	protected.Use(middleware.JWTAuthMiddleware())
 
 	protected.GET("/users", handlers.GetAllActiveUsers)
-	protected.GET("/users/:user_id", handlers.GetUserDetails)
+	protected.GET("/user", handlers.GetUserDetails)
 
-	protected.PATCH("/users", handlers.UpdateUser)
-	protected.DELETE("/users", handlers.DeleteUser)
+	protected.PATCH("/user", handlers.UpdateUser)
+	protected.DELETE("/user", handlers.DeleteUser)
 
 	r.Run(":8080")
 
