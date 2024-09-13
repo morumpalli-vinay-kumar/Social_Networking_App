@@ -1,9 +1,9 @@
 package main
 
 import (
-	"app/controllers"
+	authcontroller "app/controllers/authController"
+	servicecontroller "app/controllers/serviceController"
 	"app/database"
-	"app/handlers"
 	"app/middleware"
 	"fmt"
 	"log"
@@ -11,9 +11,16 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	passwordvalidator "github.com/wagslane/go-password-validator"
 )
 
+func ValidatePassword(pass string) error {
+	const minEntropyBits = 80
+	return passwordvalidator.Validate(pass, minEntropyBits)
+}
+
 func main() {
+
 	err1 := godotenv.Load("/home/ubuntu/app/goose.env")
 	if err1 != nil {
 		log.Fatalf("Error loading .env file")
@@ -36,18 +43,25 @@ func main() {
 
 	r := gin.Default()
 
-	r.POST("/signup", controllers.Signup)
-	r.POST("/login", controllers.Login)
+	r.GET("/health", servicecontroller.Healthcheck)
+
+	r.POST("/signup", authcontroller.Signup)
+	r.POST("/login", authcontroller.Login)
 
 	protected := r.Group("/")
 
 	protected.Use(middleware.JWTAuthMiddleware())
 
-	protected.GET("/users", handlers.GetAllActiveUsers)
-	protected.GET("/user", handlers.GetUserDetails)
+	protected.GET("/users", servicecontroller.GetAllActiveUsers)
+	protected.GET("/user", servicecontroller.GetUserDetails)
+	protected.GET("/user/following", servicecontroller.GetFollowing)
 
-	protected.PATCH("/user", handlers.UpdateUser)
-	protected.DELETE("/user", handlers.DeleteUser)
+	protected.PATCH("/user", servicecontroller.UpdateUser)
+	protected.DELETE("/user", servicecontroller.DeleteUser)
+
+	protected.POST("/user/follow", servicecontroller.FollowUser)
+	protected.POST("/user/unfollow", servicecontroller.UnfollowUser)
+	protected.POST("/user/updatepassword", servicecontroller.UpdatePassword)
 
 	r.Run(":8080")
 

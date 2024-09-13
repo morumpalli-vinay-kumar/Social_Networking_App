@@ -5,6 +5,6 @@ import (
 )
 
 func ValidatePassword(pass string) error {
-	const minEntropyBits = 62
+	const minEntropyBits = 30
 	return passwordvalidator.Validate(pass, minEntropyBits)
 }

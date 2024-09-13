@@ -1,14 +1,11 @@
 package database
 
 import (
-	"database/sql"
-
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 var GORM_DB *gorm.DB
-var SQL_DB *sql.DB
 var DB_MIGRATOR gorm.Migrator
 
 func ConnectToDatabase(dbURL string) error {
