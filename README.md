@@ -1,4 +1,5 @@
-Social Network App API
+Social Network App 
+
 This project is a Go-based RESTful API designed for managing user accounts, handling authentication, following/unfollowing users, and performing various user-related tasks in a social network context. The API is built using the Gin framework, GORM ORM for database management, and includes user validation, health checks, and more.
 
 Features
