@@ -1,29 +1,16 @@
 package utils
 
 import (
-	"errors"
-	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/gin-gonic/gin"
 )
 
-var jwtKey = []byte("secret_key")
+var jwtKey = []byte("vinay-kumar-jtg")
 
 type Claims struct {
 	UserID uint `json:"user_id"`
 	jwt.StandardClaims
-}
-
-func ValidateJWTFromHeader(c *gin.Context) (*Claims, error) {
-	authHeader := c.GetHeader("Authorization")
-	if authHeader == "" {
-		return nil, errors.New("authorization header missing")
-	}
-
-	tokenString := strings.Split(authHeader, "Bearer ")[1]
-	return ValidateJWT(tokenString)
 }
 
 func GenerateJWT(userID uint) (string, error) {

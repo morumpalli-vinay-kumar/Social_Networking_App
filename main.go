@@ -1,10 +1,9 @@
 package main
 
 import (
-	authcontroller "app/controllers/authController"
-	servicecontroller "app/controllers/serviceController"
 	"app/database"
 	"app/middleware"
+	"app/routers"
 	"fmt"
 	"log"
 	"os"
@@ -41,28 +40,15 @@ func main() {
 
 	fmt.Println("Connected to Database ----> ", databaseName)
 
-	r := gin.Default()
+	router := gin.Default()
 
-	r.GET("/health", servicecontroller.Healthcheck)
+	authGroup := router.Group("/auth")
+	routers.AuthRoutes(authGroup)
 
-	r.POST("/signup", authcontroller.Signup)
-	r.POST("/login", authcontroller.Login)
-
-	protected := r.Group("/")
-
+	protected := router.Group("/users")
 	protected.Use(middleware.JWTAuthMiddleware())
+	routers.UserRoutes(protected)
 
-	protected.GET("/users", servicecontroller.GetAllActiveUsers)
-	protected.GET("/user", servicecontroller.GetUserDetails)
-	protected.GET("/user/following", servicecontroller.GetFollowing)
-
-	protected.PATCH("/user", servicecontroller.UpdateUser)
-	protected.DELETE("/user", servicecontroller.DeleteUser)
-
-	protected.POST("/user/follow", servicecontroller.FollowUser)
-	protected.POST("/user/unfollow", servicecontroller.UnfollowUser)
-	protected.POST("/user/updatepassword", servicecontroller.UpdatePassword)
-
-	r.Run(":8080")
+	router.Run(":8080")
 
 }

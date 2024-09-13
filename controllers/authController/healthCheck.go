@@ -1,4 +1,4 @@
-package servicecontroller
+package authcontroller
 
 import (
 	"net/http"
