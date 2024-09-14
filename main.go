@@ -1,6 +1,7 @@
 package main
 
 import (
+	controller "app/controllers"
 	"app/database"
 	"app/middleware"
 	"app/routers"
@@ -35,6 +36,7 @@ func main() {
 	fmt.Println("Connected to Database ----> ", databaseName)
 
 	router := gin.Default()
+	router.GET("/health", controller.Healthcheck)
 
 	authGroup := router.Group("/auth")
 	routers.AuthRoutes(authGroup)
