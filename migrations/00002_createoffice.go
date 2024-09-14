@@ -1,13 +1,12 @@
 package migrations
 
 import (
+	"app/database"
 	"app/models"
 	"context"
 	"database/sql"
 
 	"github.com/pressly/goose/v3"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
 
 func init() {
@@ -15,21 +14,9 @@ func init() {
 }
 
 func upCreateoffice(ctx context.Context, tx *sql.Tx) error {
-	db, err := gorm.Open(postgres.New(postgres.Config{
-		Conn: tx,
-	}), &gorm.Config{})
-	if err != nil {
-		return err
-	}
-	return db.Migrator().CreateTable(&models.OfficeDetails{})
+	return database.DB_MIGRATOR.CreateTable(&models.OfficeDetails{})
 }
 
 func downCreateoffice(ctx context.Context, tx *sql.Tx) error {
-	db, err := gorm.Open(postgres.New(postgres.Config{
-		Conn: tx,
-	}), &gorm.Config{})
-	if err != nil {
-		return err
-	}
-	return db.Migrator().DropTable(&models.OfficeDetails{})
+	return database.DB_MIGRATOR.DropTable(&models.OfficeDetails{})
 }

@@ -1,13 +1,12 @@
 package migrations
 
 import (
+	"app/database"
 	"app/models"
 	"context"
 	"database/sql"
 
 	"github.com/pressly/goose/v3"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
 
 func init() {
@@ -15,23 +14,11 @@ func init() {
 }
 
 func upCreateusers(ctx context.Context, tx *sql.Tx) error {
-	db, err := gorm.Open(postgres.New(postgres.Config{
-		Conn: tx,
-	}), &gorm.Config{})
 
-	if err != nil {
-		return err
-	}
-	return db.Migrator().CreateTable(&models.UserDetails{})
+	return database.DB_MIGRATOR.CreateTable(&models.UserDetails{})
 
 }
 
 func downCreateusers(ctx context.Context, tx *sql.Tx) error {
-	db, err := gorm.Open(postgres.New(postgres.Config{
-		Conn: tx,
-	}), &gorm.Config{})
-	if err != nil {
-		return err
-	}
-	return db.Migrator().DropTable(&models.UserDetails{})
+	return database.DB_MIGRATOR.DropTable(&models.UserDetails{})
 }
