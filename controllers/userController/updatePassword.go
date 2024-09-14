@@ -50,5 +50,5 @@ func UpdatePassword(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Password updated successfully"})
+	c.JSON(http.StatusAccepted, gin.H{"message": "Password updated successfully"})
 }

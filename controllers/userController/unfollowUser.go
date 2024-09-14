@@ -34,5 +34,5 @@ func UnfollowUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Successfully unfollowed the user"})
+	c.JSON(http.StatusAccepted, gin.H{"message": "Successfully unfollowed the user"})
 }

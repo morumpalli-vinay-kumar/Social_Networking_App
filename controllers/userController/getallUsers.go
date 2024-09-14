@@ -22,5 +22,5 @@ func GetAllActiveUsers(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"Users": allusers})
+	c.JSON(http.StatusAccepted, gin.H{"Users": allusers})
 }

@@ -30,5 +30,5 @@ func GetFollowers(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusOK, gin.H{"followers": userfollowers})
+	c.JSON(http.StatusAccepted, gin.H{"followers": userfollowers})
 }

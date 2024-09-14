@@ -35,5 +35,5 @@ func GetUserDetails(c *gin.Context) {
 	}
 	response := serializers.BuildUpdateResponse(user, residential, office)
 
-	c.JSON(http.StatusCreated, response)
+	c.JSON(http.StatusAccepted, response)
 }
