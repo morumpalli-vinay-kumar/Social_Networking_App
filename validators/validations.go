@@ -11,6 +11,13 @@ func ValidationCheck(req serializers.User) error {
 		return errors.New("please use strong password")
 	}
 
+	if check := ValidatePhoneNumber(req.ResidentialDetails.ContactNo1); !check {
+		return errors.New("invalid residential phone number")
+	}
+	if check := ValidatePhoneNumber(req.OfficeDetails.ContactNo); !check {
+		return errors.New("invalid office phone number")
+	}
+
 	if err := ValidateGender(req.Gender); err != nil {
 		return err
 	}
