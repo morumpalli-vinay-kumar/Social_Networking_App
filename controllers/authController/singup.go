@@ -37,6 +37,7 @@ func Signup(c *gin.Context) {
 		Gender:        req.Gender,
 		MaritalStatus: req.MaritalStatus,
 	}
+
 	if err := userDetails.HashPassword(userDetails.Password); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
 		return
@@ -44,7 +45,7 @@ func Signup(c *gin.Context) {
 
 	if err := tx.Create(&userDetails).Error; err != nil {
 		tx.Rollback()
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error creating user details"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -60,7 +61,7 @@ func Signup(c *gin.Context) {
 
 	if err := tx.Create(&residentialDetails).Error; err != nil {
 		tx.Rollback()
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error creating residential details", "err": err})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -78,7 +79,7 @@ func Signup(c *gin.Context) {
 
 	if err := tx.Create(&officeDetails).Error; err != nil {
 		tx.Rollback()
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error creating office details"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 

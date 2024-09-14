@@ -10,13 +10,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	passwordvalidator "github.com/wagslane/go-password-validator"
 )
-
-func ValidatePassword(pass string) error {
-	const minEntropyBits = 80
-	return passwordvalidator.Validate(pass, minEntropyBits)
-}
 
 func main() {
 

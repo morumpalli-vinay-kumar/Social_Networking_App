@@ -47,9 +47,9 @@ func FollowUser(c *gin.Context) {
 	}
 
 	if err := database.GORM_DB.Create(&data).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create follow relationship"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "Follow relationship created"})
+	c.JSON(http.StatusCreated, gin.H{"message": "success"})
 }

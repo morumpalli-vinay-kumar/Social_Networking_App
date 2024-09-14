@@ -22,7 +22,7 @@ func GetFollowers(c *gin.Context) {
 		return
 	}
 
-	var userfollowers []serializers.Followinput
+	var userfollowers []serializers.Followoutput
 	for _, follow := range follows {
 		var user models.UserDetails
 		if err := database.GORM_DB.Where("id = ?", follow.Follower).First(&user).Error; err == nil {

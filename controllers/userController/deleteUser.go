@@ -21,15 +21,15 @@ func DeleteUser(c *gin.Context) {
 	var residential models.ResidentialDetails
 
 	if err := database.GORM_DB.Where("id = ?", userID).First(&user).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 	if err := database.GORM_DB.Where("user_id = ?", userID).First(&office).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": userID})
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 	if err := database.GORM_DB.Where("user_id = ?", userID).First(&residential).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": userID})
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 	response := serializers.BuildUpdateResponse(user, residential, office)
@@ -38,7 +38,7 @@ func DeleteUser(c *gin.Context) {
 
 	if err := tx.Delete(&user).Error; err != nil {
 		tx.Rollback()
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Failed to delete user"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete user"})
 		return
 	}
 
