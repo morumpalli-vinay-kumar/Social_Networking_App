@@ -2,6 +2,7 @@ package servicecontroller
 
 import (
 	"app/database"
+	"app/middleware/validators"
 	"app/models"
 	"net/http"
 
@@ -27,13 +28,24 @@ func UpdatePassword(c *gin.Context) {
 		return
 	}
 
-	var user models.UserDetails
-	if err := database.GORM_DB.Where("id = ?", userID).First(&user).Error; err != nil {
+	if err := validators.ValidatePassword(input.NewPassword); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	type UserFields struct {
+		Password string `gorm:"column:password"`
+	}
+
+	var userFields UserFields
+	if err := database.GORM_DB.Model(&models.UserDetails{}).Select("password").Where("id = ?", userID).First(&userFields).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.OldPassword)); err != nil {
+	userpassword := userFields.Password
+
+	if err := bcrypt.CompareHashAndPassword([]byte(userpassword), []byte(input.OldPassword)); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Old password is incorrect"})
 		return
 	}
@@ -44,8 +56,7 @@ func UpdatePassword(c *gin.Context) {
 		return
 	}
 
-	user.Password = string(hashedPassword)
-	if err := database.GORM_DB.Save(&user).Error; err != nil {
+	if err := database.GORM_DB.Model(&models.UserDetails{}).Where("id = ?", userID).Update("password", string(hashedPassword)).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update password"})
 		return
 	}

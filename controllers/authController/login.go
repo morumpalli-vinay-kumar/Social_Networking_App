@@ -2,6 +2,7 @@ package authcontroller
 
 import (
 	"app/database"
+	"app/middleware/validators"
 	"app/models"
 	"app/serializers"
 	"app/utils"
@@ -18,6 +19,12 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	if err := validators.ValidationChecklogin(loginInput); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	var foundUser models.UserDetails
 	if err := database.GORM_DB.Where("email = ?", loginInput.Email).First(&foundUser).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email or password"})

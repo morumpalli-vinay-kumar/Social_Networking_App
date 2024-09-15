@@ -2,10 +2,10 @@ package authcontroller
 
 import (
 	"app/database"
+	"app/middleware/validators"
 	"app/models"
 	"app/serializers"
 	"app/utils"
-	"app/validators"
 	"net/http"
 	"time"
 
@@ -17,11 +17,11 @@ func Signup(c *gin.Context) {
 	var req serializers.User
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error while parsing request": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "heloooo "})
 		return
 	}
 
-	if err := validators.ValidationCheck(req); err != nil {
+	if err := validators.ValidationCheckSignup(req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

@@ -11,9 +11,9 @@ type Updateresponseuser struct {
 	LastModified       string             `json:"last_modified"`
 	FirstName          string             `json:"first_name"`
 	LastName           string             `json:"last_name"`
-	DateOfBirth        string             `json:"date_of_birth"`
-	Gender             string             `json:"gender"`
-	MaritalStatus      string             `json:"marital_status"`
+	DateOfBirth        time.Time          `json:"date_of_birth"`
+	Gender             models.Genders     `json:"gender"`
+	MaritalStatus      models.Marital     `json:"marital_status"`
 	ResidentialDetails ResidentialDetails `json:"residential_details"`
 	OfficeDetails      OfficeDetails      `json:"office_details"`
 }

@@ -12,7 +12,7 @@ import (
 func GetFollowers(c *gin.Context) {
 	userID, exists := c.Get("userID")
 	if !exists {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "User ID not found in context"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "User ID not found in context"})
 		return
 	}
 
@@ -24,9 +24,9 @@ func GetFollowers(c *gin.Context) {
 
 	var userfollowers []serializers.Followoutput
 	for _, follow := range follows {
-		var user models.UserDetails
-		if err := database.GORM_DB.Where("id = ?", follow.Follower).First(&user).Error; err == nil {
-			userfollowers = append(userfollowers, serializers.GetFollowingDetails(user))
+		var user serializers.Followoutput
+		if err := database.GORM_DB.Model(&models.UserDetails{}).Where("id = ?", follow.Follower).First(&user).Error; err == nil {
+			userfollowers = append(userfollowers, user)
 		}
 	}
 

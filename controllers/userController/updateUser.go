@@ -2,6 +2,7 @@ package servicecontroller
 
 import (
 	"app/database"
+	"app/middleware/validators"
 	"app/models"
 	"app/serializers"
 	"net/http"
@@ -18,39 +19,47 @@ func UpdateUser(c *gin.Context) {
 	}
 
 	var updateInput serializers.UserUpdateInput
-	var user models.UserDetails
 
 	if err := c.ShouldBindJSON(&updateInput); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "only first name, last name, gender,date of birth , Marital Status are allowed to update"})
+			"error": err.Error()})
 		return
 	}
 
-	if err := database.GORM_DB.Where("id = ?", userID).First(&user).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "User has been updated already"})
+	if err := validators.ValidationCheckUpdate(updateInput); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	user.FirstName = updateInput.FirstName
-	user.LastName = updateInput.LastName
-	user.Gender = updateInput.Gender
-	user.DateOfBirth = updateInput.DateOfBirth
-	user.MaritalStatus = updateInput.MaritalStatus
+	updatedFields := map[string]interface{}{
+		"first_name":     updateInput.FirstName,
+		"last_name":      updateInput.LastName,
+		"gender":         updateInput.Gender,
+		"date_of_birth":  updateInput.DateOfBirth,
+		"marital_status": updateInput.MaritalStatus,
+	}
 
-	if err := database.GORM_DB.Save(&user).Error; err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Failed to update user"})
+	if err := database.GORM_DB.Model(&models.UserDetails{}).
+		Where("id = ?", userID).
+		Updates(updatedFields).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update user"})
 		return
 	}
 
+	var user models.UserDetails
 	var office models.OfficeDetails
 	var residential models.ResidentialDetails
 
+	if err := database.GORM_DB.Where("id = ?", userID).First(&user).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to generate response"})
+		return
+	}
 	if err := database.GORM_DB.Where("user_id = ?", userID).First(&office).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": userID})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to generate response"})
 		return
 	}
 	if err := database.GORM_DB.Where("user_id = ?", userID).First(&residential).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": userID})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to generate response"})
 		return
 	}
 

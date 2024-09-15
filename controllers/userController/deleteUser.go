@@ -12,7 +12,7 @@ import (
 func DeleteUser(c *gin.Context) {
 	userID, exists := c.Get("userID")
 	if !exists {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "User ID not found in context"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "User ID not found in context"})
 		return
 	}
 
@@ -41,10 +41,20 @@ func DeleteUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete user"})
 		return
 	}
+	if err := tx.Delete(&residential).Error; err != nil {
+		tx.Rollback()
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete residential details"})
+		return
+	}
+	if err := tx.Delete(&office).Error; err != nil {
+		tx.Rollback()
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete office details"})
+		return
+	}
 
 	if err := tx.Where("follower = ? OR following = ?", userID, userID).Delete(&models.Follow{}).Error; err != nil {
 		tx.Rollback()
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Failed to delete user"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete follow relations"})
 		return
 	}
 

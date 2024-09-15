@@ -14,7 +14,7 @@ func FollowUser(c *gin.Context) {
 	userID, exists := c.Get("userID")
 
 	if !exists {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "User ID not found in context"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "User ID not found in context"})
 		return
 	}
 
@@ -24,14 +24,14 @@ func FollowUser(c *gin.Context) {
 	}
 
 	var followerUser models.UserDetails
-	if err := database.GORM_DB.First(&followerUser, userID).Error; err != nil {
+	if err := database.GORM_DB.Where("id = ?", userID).First(&followerUser).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "You deleted your account"})
 		return
 	}
 
 	var followingUser models.UserDetails
-	if err := database.GORM_DB.First(&followingUser, follow.Following).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "The user you are trying to follow does not exist"})
+	if err := database.GORM_DB.Where("id = ?", follow.Following).First(&followingUser).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User you trying to follow does not exist"})
 		return
 	}
 
