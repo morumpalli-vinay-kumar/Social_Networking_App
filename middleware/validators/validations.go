@@ -1,7 +1,7 @@
 package validators
 
 import (
-	"app/serializers"
+	"app/middleware/serializers"
 	"errors"
 )
 

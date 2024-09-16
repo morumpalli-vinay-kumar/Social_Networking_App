@@ -47,3 +47,13 @@ func Loginoutput(foundUser models.UserDetails) Loginresponse {
 		LastModified: foundUser.UpdatedAt.Format(time.RFC3339),
 	}
 }
+
+type AllUsers struct {
+	ID    uint   `json:"user_id"`
+	Email string `json:"email"`
+}
+
+type PasswordUpdateInput struct {
+	OldPassword string `json:"old_password" binding:"required"`
+	NewPassword string `json:"new_password" binding:"required"`
+}
