@@ -4,7 +4,6 @@ import (
 	controller "app/controllers"
 	"app/database"
 	"app/middleware"
-	"app/models"
 	"app/routers"
 	"fmt"
 	"log"
@@ -36,11 +35,6 @@ func main() {
 	}
 
 	fmt.Println("Connected to Database ----> ", databaseName)
-
-	database.GORM_DB.AutoMigrate(&models.UserDetails{})
-	database.GORM_DB.AutoMigrate(&models.Follow{})
-	database.GORM_DB.AutoMigrate(&models.ResidentialDetails{})
-	database.GORM_DB.AutoMigrate(&models.OfficeDetails{})
 
 	router := gin.Default()
 
