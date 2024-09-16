@@ -6,11 +6,11 @@ import (
 )
 
 type UserUpdateInput struct {
-	FirstName     string `json:"first_name"`
-	LastName      string `json:"last_name"`
-	DateOfBirth   string `json:"date_of_birth"`
-	Gender        string `json:"gender"`
-	MaritalStatus string `json:"marital_status"`
+	FirstName     string         `json:"first_name"`
+	LastName      string         `json:"last_name"`
+	DateOfBirth   time.Time      `json:"date_of_birth" gorm:"not null;type:date"`
+	Gender        models.Genders `json:"gender"`
+	MaritalStatus models.Marital `json:"marital_status"`
 }
 
 type Logininput struct {
@@ -31,9 +31,9 @@ type User struct {
 	Password           string             `json:"password"`
 	FirstName          string             `json:"first_name"`
 	LastName           string             `json:"last_name"`
-	DateOfBirth        string             `json:"date_of_birth"`
-	Gender             string             `json:"gender"`
-	MaritalStatus      string             `json:"marital_status"`
+	Gender             models.Genders     `json:"gender"`
+	MaritalStatus      models.Marital     `json:"marital_status"`
+	DateOfBirth        time.Time          `json:"date_of_birth"`
 	ResidentialDetails ResidentialDetails `json:"residential_details"`
 	OfficeDetails      OfficeDetails      `json:"office_details"`
 }

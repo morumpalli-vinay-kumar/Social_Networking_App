@@ -6,8 +6,6 @@ import (
 	"log"
 	"os"
 
-	_ "app/migrations"
-
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/pressly/goose/v3"
