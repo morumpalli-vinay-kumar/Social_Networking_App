@@ -18,7 +18,7 @@ type Updateresponseuser struct {
 	OfficeDetails      OfficeDetails      `json:"office_details"`
 }
 
-func BuildUpdateResponse(userDetails models.UserDetails, residentialDetails models.ResidentialDetails, officeDetails models.OfficeDetails) Updateresponseuser {
+func BuildUpdateResponse(userDetails models.UserDetails) Updateresponseuser {
 	return Updateresponseuser{
 		UserID:             userDetails.ID,
 		Email:              userDetails.Email,
@@ -28,8 +28,8 @@ func BuildUpdateResponse(userDetails models.UserDetails, residentialDetails mode
 		DateOfBirth:        userDetails.DateOfBirth,
 		Gender:             userDetails.Gender,
 		MaritalStatus:      userDetails.MaritalStatus,
-		ResidentialDetails: BuildUpdatedResidentialDetails(residentialDetails),
-		OfficeDetails:      BuildUpdatedOfficeDetails(officeDetails),
+		ResidentialDetails: BuildUpdatedResidentialDetails(userDetails.ResidentialDetails),
+		OfficeDetails:      BuildUpdatedOfficeDetails(userDetails.OfficeDetails),
 	}
 }
 

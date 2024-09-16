@@ -47,18 +47,13 @@ func UpdateUser(c *gin.Context) {
 	}
 
 	var user models.UserDetails
-	var office models.OfficeDetails
-	var residential models.ResidentialDetails
 
 	if err := database.GORM_DB.Preload("OfficeDetails").Preload("ResidentialDetails").Where("id = ?", userID).First(&user).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": userID})
 		return
 	}
 
-	office = user.OfficeDetails
-	residential = user.ResidentialDetails
-
-	response := serializers.BuildUpdateResponse(user, residential, office)
+	response := serializers.BuildUpdateResponse(user)
 
 	c.JSON(http.StatusCreated, response)
 }
