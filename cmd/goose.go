@@ -16,7 +16,6 @@ var flags = flag.NewFlagSet("goose", flag.ExitOnError)
 func main() {
 	flags.Parse(os.Args[1:])
 	args := flags.Args()
-	fmt.Println(len(args))
 	if len(args) < 1 {
 		flags.Usage()
 		return
