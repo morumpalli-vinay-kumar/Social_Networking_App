@@ -17,6 +17,7 @@ import (
 func main() {
 
 	err1 := godotenv.Load("/home/ubuntu/app/goose.env")
+
 	if err1 != nil {
 		log.Fatalf("Error loading .env file")
 	}
@@ -39,8 +40,8 @@ func main() {
 	router := gin.Default()
 
 	corsConfig := cors.Config{
-		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"},
+		AllowOrigins:     []string{"https://gorm.io/docs/logger"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
 		AllowCredentials: true,
 	}

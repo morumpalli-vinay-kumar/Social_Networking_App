@@ -2,9 +2,47 @@ package validators
 
 import (
 	"app/middleware/serializers"
+	"app/models"
 	"errors"
+	"regexp"
+	"strings"
+
+	"github.com/asaskevich/govalidator"
+	passwordvalidator "github.com/wagslane/go-password-validator"
 )
 
+func ValidatePhoneNumber(phone string) bool {
+
+	regex := `^\+91[6-9]\d{9}$`
+
+	re := regexp.MustCompile(regex)
+	return re.MatchString(phone)
+}
+
+func ValidatePassword(pass string) error {
+	const minEntropyBits = 50
+	return passwordvalidator.Validate(pass, minEntropyBits)
+}
+
+func ValidateMaritalStatus(m models.Marital) error {
+	switch strings.ToLower(string(m)) {
+	case string(models.Married), string(models.Single), string(models.Divorced), string(models.Widowed):
+		return nil
+	}
+	return errors.New("invalid gender")
+}
+
+func ValidateGender(g models.Genders) error {
+	switch strings.ToLower(string(g)) {
+	case string(models.Male), string(models.Female), string(models.Other):
+		return nil
+	}
+	return errors.New("invalid gender")
+}
+
+func ValidateEmail(email string) bool {
+	return govalidator.IsEmail(email)
+}
 func ValidationChecklogin(loginInput serializers.Logininput) error {
 	if check := ValidateEmail(loginInput.Email); !check {
 		return errors.New("invalid-mail")

@@ -1,7 +1,7 @@
 package routers
 
 import (
-	usercontroller "app/controllers/userController"
+	usercontroller "app/controllers"
 
 	"github.com/gin-gonic/gin"
 )
